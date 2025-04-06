@@ -1,24 +1,11 @@
-from flask import Flask, render_template,request
-import mlflow
-import pickle
-import os
-import pandas as pd
-import preprocessing_utility
 import numpy as np
 import pandas as pd
 import os
 import re
 import nltk
 import string
-
-import nltk
-nltk.download('wordnet')
-nltk.download('omw-1.4')
-
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-from nltk.corpus import wordnet
-
 
 def lemmatization(text):
     """Lemmatize the text."""
@@ -71,52 +58,3 @@ def normalize_text(text):
     text = lemmatization(text)
 
     return text
-
-
-dagshub_token = os.getenv("DAGSHUB_PAT")
-if not dagshub_token:
-    raise EnvironmentError("DAGSHUB_PAT environment variable is not set")
-
-os.environ["MLFLOW_TRACKING_USERNAME"] = dagshub_token
-os.environ["MLFLOW_TRACKING_PASSWORD"] = dagshub_token
-
-dagshub_url = "https://dagshub.com"
-repo_owner = "divyavikb"
-repo_name = "mlops-mini-project"
-
-# Set up MLflow tracking URI
-mlflow.set_tracking_uri(f'{dagshub_url}/{repo_owner}/{repo_name}.mlflow')
-
-def get_latest_model_version(model_name):
-    client = mlflow.MlflowClient()
-    latest_version = client.get_latest_versions(model_name, stages=["Staging"])
-    if not latest_version:
-        latest_version = client.get_latest_versions(model_name, stages=["None"])
-    return latest_version[0].version if latest_version else None
-
-model_name = "my_model"
-model_version = get_latest_model_version(model_name)
-
-model_uri = f'models:/{model_name}/{model_version}'
-model = mlflow.pyfunc.load_model(model_uri)
-vectorizer = pickle.load(open('models/vectorizer.pkl','rb'))
-
-app = Flask(__name__)
-@app.route('/')
-def home():
-    return render_template('index.html',result=None)
-
-
-@app.route('/predict', methods=['POST'])
-def predict():
-    text=request.form['text']
-    
-
-    text = normalize_text(text)
-    features = vectorizer.transform([text])
-    result = model.predict(features)
-    return render_template('index.html',result=str(result[0]))
-                           
-  
-
-app.run(debug=True,port=5000)
