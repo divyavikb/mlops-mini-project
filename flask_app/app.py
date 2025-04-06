@@ -15,7 +15,7 @@ import string
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from flask import Flask, render_template,request
-from  preprocessing_utility import normalize_text
+
 
 import nltk
 nltk.download('wordnet')
@@ -137,5 +137,5 @@ def predict():
     return render_template('index.html', result=result[0])
 
 if __name__ == "__main__":
-    
+
     app.run(debug=True, host="0.0.0.0")
