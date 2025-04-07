@@ -58,7 +58,7 @@ jobs:
       - name: Build Docker image
         if: success()
         run: |
-          docker build -t divyavik_ecr .
+          docker build -t divyavik_ecr:v3 .
 
       - name: Tag Docker image
         if: success()
