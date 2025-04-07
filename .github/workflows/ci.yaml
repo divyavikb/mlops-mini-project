@@ -63,9 +63,9 @@ jobs:
       - name: Tag Docker image
         if: success()
         run: |
-          docker tag divyavik_ecr:latest 908928711788.dkr.ecr.ap-southeast-2.amazonaws.com/divyavik_ecr:latest
+          docker tag divyavik_ecr:latest 908928711788.dkr.ecr.ap-southeast-2.amazonaws.com/divyavik_ecr:v2
 
       - name: Push Docker image to AWS ECR
         if: success()
         run: |
-          docker push 908928711788.dkr.ecr.ap-southeast-2.amazonaws.com/divyavik_ecr:latest
+          docker push 908928711788.dkr.ecr.ap-southeast-2.amazonaws.com/divyavik_ecr:v2
