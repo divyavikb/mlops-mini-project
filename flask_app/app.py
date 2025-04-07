@@ -131,7 +131,7 @@ def predict():
     features_df = pd.DataFrame(features.toarray(), columns=[str(i) for i in range(features.shape[1])])
 
     # prediction
-    result = model.predict(features.toarray())
+    result = model.predict(features_df)
     print("Processed Text:", text)
     print("Model Output:", result)
 
