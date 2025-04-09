@@ -69,26 +69,7 @@ jobs:
         if: success()
         run: |
           docker push 908928711788.dkr.ecr.ap-southeast-2.amazonaws.com/divyavik_ecr:v3
-      - name: Deploy to EC2
-        if: success()
-        uses: appleboy/ssh-action@v0.1.5
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            aws configure set aws_access_key_id ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws configure set aws_secret_access_key ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws configure set default.region ap-southeast-2
-            aws ecr get-login-password --region ap-southeast-2 | sudo docker login --username AWS --password-stdin 908928711788.dkr.ecr.ap-southeast-2.amazonaws.com
-            sudo docker pull 908928711788.dkr.ecr.ap-southeast-2.amazonaws.com/divyavik_ecr:v3
-
-            sudo docker stop my-app || true
-            sudo docker rm my-app || true
-
-            sudo docker run -d -p 80:5000 --name my-app \
-            -e DAGSHUB_PAT=${{ secrets.DAGSHUB_PAT }} \
-            908928711788.dkr.ecr.ap-southeast-2.amazonaws.com/divyavik_ecr:v3
+      
       # Zip the required files
       - name: Zip files for deployment
         if: success()
